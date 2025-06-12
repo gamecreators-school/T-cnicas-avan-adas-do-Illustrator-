@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso de Desenvolvimento de Jogos 2D - Semana 5-6 - GameCreators</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --roxo: #6C5CE7;
+            --ciano: #00CEC9;
+            --amarelo: #FDCB6E;
+            --branco: #F9F9F9;
+            --cinza-escuro: #2D3436;
+            --azul-escuro: #1E1E2F;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--branco) 0%, #e8f4f8 100%);
+            color: var(--cinza-escuro);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Principal */
+        header {
+            background: linear-gradient(135deg, var(--roxo) 0%, var(--ciano) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+        }
+        
+        /* Alerta Google Drive */
+        .drive-alert-global {
+            background: linear-gradient(135deg, rgba(253, 203, 110, 0.1) 0%, rgba(253, 203, 110, 0.05) 100%);
+            border: 3px solid var(--amarelo);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(253, 203, 110, 0.3);
+        }
+        
+        .drive-alert-global h3 {
+            color: var(--cinza-escuro);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+        
+        .drive-alert-global p {
+            font-size: 1.2rem;
+            color: var(--cinza-escuro);
+        }
+        
+        /* Menu de Aulas */
+        .menu-aulas {
+            background: var(--azul-escuro);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(30, 30, 47, 0.4);
+        }
+        
+        .menu-btn {
+            background: var(--roxo);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+        
+        .menu-btn:hover {
+            background: var(--ciano);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 206, 201, 0.4);
+        }
+        
+        .menu-btn.active {
+            background: var(--ciano);
+            box-shadow: 0 0 20px rgba(0, 206, 201, 0.6);
+        }
+        
+        /* Aulas */
+        .aula {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        
+        .aula.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .aula-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid var(--amarelo);
+        }
+        
+        .aula-header h2 {
+            background: linear-gradient(135deg, var(--roxo), var(--ciano));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn-estela {
+            background: linear-gradient(135deg, var(--roxo) 0%, var(--ciano) 100%);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn-estela:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+        }
+        
+        .btn-estela.playing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Controles de Áudio */
+        .audio-controls {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px solid var(--ciano);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .audio-controls.ativo {
+            display: block;
+        }
+        
+        .audio-controls h4 {
+            color: var(--roxo);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .controles-principais {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .controles-principais button {
+            background: var(--roxo);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .controles-principais button:hover {
+            background: var(--ciano);
+            transform: translateY(-2px);
+        }
+        
+        .controles-velocidade {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .controles-velocidade label {
+            font-weight: 600;
+            color: var(--cinza-escuro);
+            margin-right: 10px;
+        }
+        
+        .controles-velocidade button {
+            background: #ddd;
+            color: var(--cinza-escuro);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+        
+        .controles-velocidade button:hover {
+            background: var(--roxo);
+            color: white;
+        }
+        
+        .controles-velocidade button.active {
+            background: var(--ciano);
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 206, 201, 0.5);
+        }
+        
+        .status-audio {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--cinza-escuro);
+            border: 2px solid var(--amarelo);
+        }
+        
+        /* Texto da Estela */
+        .texto-estela {
+            background: rgba(108, 92, 231, 0.05);
+            border: 2px solid var(--roxo);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .texto-estela.ativo {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .texto-estela h4 {
+            color: var(--roxo);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .texto-estela p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        /* Seções de Conteúdo */
+        .secao {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.05) 0%, rgba(0, 206, 201, 0.05) 100%);
+            border-radius: 15px;
+            border-left: 5px solid var(--roxo);
+        }
+        
+        .secao h3 {
+            color: var(--roxo);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .secao p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .destaque {
+            background: linear-gradient(135deg, var(--amarelo) 0%, #f39c12 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(253, 203, 110, 0.4);
+        }
+        
+        .exemplo {
+            background: rgba(0, 206, 201, 0.1);
+            border: 2px solid var(--ciano);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .exemplo h4 {
+            color: var(--ciano);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        /* Quiz Interativo */
+        .quiz {
+            background: linear-gradient(135deg, rgba(253, 203, 110, 0.2) 0%, rgba(253, 203, 110, 0.1) 100%);
+            border: 3px solid var(--amarelo);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        
+        .quiz h4 {
+            color: var(--cinza-escuro);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .opcoes {
+            display: grid;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .opcao {
+            background: white;
+            border: 3px solid #ddd;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        .opcao:hover {
+            background: rgba(108, 92, 231, 0.1);
+            border-color: var(--roxo);
+            transform: translateX(10px);
+        }
+        
+        .opcao.correta {
+            background: rgba(46, 213, 115, 0.2);
+            border-color: #2ed573;
+            color: #27ae60;
+        }
+        
+        .opcao.incorreta {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: #ff4757;
+            color: #e74c3c;
+        }
+        
+        /* Campo de Resposta */
+        .campo-resposta {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(108, 92, 231, 0.05);
+            border-radius: 15px;
+            border: 2px solid var(--roxo);
+        }
+        
+        .campo-resposta h4 {
+            color: var(--roxo);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .campo-resposta textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        .campo-resposta textarea:focus {
+            outline: none;
+            border-color: var(--ciano);
+            box-shadow: 0 0 10px rgba(0, 206, 201, 0.3);
+        }
+        
+        .btn-salvar {
+            background: var(--ciano);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-salvar:hover {
+            background: #00a8a3;
+            transform: translateY(-2px);
+        }
+        
+        /* Alerta Google Drive nas aulas */
+        .drive-alert {
+            background: var(--amarelo);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(253, 203, 110, 0.4);
+        }
+        
+        /* Desafio Prático */
+        .desafio {
+            background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--roxo) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .desafio h4 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+        
+        .desafio p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+        
+        /* Navegação */
+        .navegacao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px solid #eee;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, var(--roxo) 0%, var(--ciano) 100%);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progresso {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid var(--ciano);
+            font-weight: 600;
+            color: var(--cinza-escuro);
+        }
+        
+        /* Parabéns Final */
+        .parabens {
+            background: linear-gradient(135deg, var(--amarelo) 0%, #f39c12 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 15px 40px rgba(253, 203, 110, 0.4);
+        }
+        
+        .parabens h3 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .parabens p {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Animações */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            header h1 { font-size: 2.2rem; }
+            .aula { padding: 25px; }
+            .aula-header h2 { font-size: 2rem; }
+            .navegacao { flex-direction: column; gap: 20px; }
+            .menu-aulas { gap: 10px; }
+            .menu-btn { padding: 12px 20px; min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Principal -->
+        <header>
+            <h1>🚀 Illustrator Avançado</h1>
+            <p>Semana 5-6: Dominando técnicas profissionais de criação de assets!</p>
+        </header>
+        
+        <!-- Alerta Global Google Drive -->
+        <div class="drive-alert-global">
+            <h3>💾 IMPORTANTE: Continue organizando no Google Drive</h3>
+            <p>Nesta etapa avançada, você criará assets complexos. Mantenha tudo organizado nas pastas que já criou!</p>
+        </div>
+        
+        <!-- Menu de Navegação das Aulas -->
+        <nav class="menu-aulas">
+            <button class="menu-btn active" onclick="irParaAula(17)">Aula 17</button>
+            <button class="menu-btn" onclick="irParaAula(18)">Aula 18</button>
+            <button class="menu-btn" onclick="irParaAula(19)">Aula 19</button>
+            <button class="menu-btn" onclick="irParaAula(20)">Aula 20</button>
+            <button class="menu-btn" onclick="irParaAula(21)">Aula 21</button>
+            <button class="menu-btn" onclick="irParaAula(22)">Aula 22</button>
+            <button class="menu-btn" onclick="irParaAula(23)">Aula 23</button>
+            <button class="menu-btn" onclick="irParaAula(24)">Aula 24</button>
+            <button class="menu-btn" onclick="irParaAula(25)">Aula 25</button>
+            <button class="menu-btn" onclick="irParaAula(26)">Aula 26</button>
+        </nav>
+        
+        <!-- Aula 17: Manipulação avançada de formas -->
+        <section class="aula active" id="aula17">
+            <div class="aula-header">
+                <h2>🔧 Aula 17: Manipulação Avançada de Formas</h2>
+                <button class="btn-estela" onclick="ouvirEstela(17)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-17">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-17">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-17">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Bem-vindos à fase avançada! Agora que vocês dominam o básico, vamos mergulhar nas técnicas que separam amadores de profissionais!</p>
+                    
+                    <p>Manipulação avançada de formas é como ser um escultor digital. Você pega formas simples e as transforma em obras de arte complexas. Vamos aprender a usar Pathfinder, operações booleanas e técnicas de deformação que vão fazer seus assets brilharem!</p>
+                    
+                    <p>O segredo está em combinar formas de maneiras inteligentes. É como cozinhar - você mistura ingredientes simples para criar pratos sofisticados!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>⚡ Formas = Peças de LEGO Profissionais</h3>
+                <p><strong>Manipulação avançada é como ser um arquiteto digital!</strong> Você combina, subtrai e modifica formas para criar elementos únicos e profissionais.</p>
+                
+                <div class="destaque">
+                    🎯 <strong>Poder do Pathfinder:</strong> Une, intersecta, subtrai e divide formas. É sua ferramenta de superpoder para criar qualquer coisa!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🔧 Arsenal de Operações Avançadas:</h4>
+                    <p><strong>➕ UNIR:</strong> Combina formas em uma só</p>
+                    <p><strong>➖ SUBTRAIR:</strong> Remove uma forma de outra</p>
+                    <p><strong>✂️ INTERSECTAR:</strong> Mantém apenas a área comum</p>
+                    <p><strong>🔄 DIVIDIR:</strong> Separa formas em pedaços</p>
+                    <p><strong>🎭 DEFORMAR:</strong> Distorce e modifica organicamente</p>
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Aplicações em Games:</h4>
+                    <p><strong>⚔️ ARMAS COMPLEXAS:</strong> Combine cilindros + retângulos</p>
+                    <p><strong>🏰 CONSTRUÇÕES:</strong> Una múltiplas formas arquitetônicas</p>
+                    <p><strong>👾 INIMIGOS ÚNICOS:</strong> Subtraia formas para criar recortes</p>
+                    <p><strong>💎 POWER-UPS:</strong> Intersecte formas para efeitos especiais</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Operações com Formas</h4>
+                <p>Para criar uma moeda com um buraco no meio, qual operação você usaria?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">➕ Unir dois círculos</div>
+                    <div class="opcao" onclick="responder(this, true)">➖ Subtrair círculo pequeno do grande</div>
+                    <div class="opcao" onclick="responder(this, false)">✂️ Intersectar círculos</div>
+                    <div class="opcao" onclick="responder(this, false)">🔄 Dividir um círculo</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Planejando Asset Complexo:</h4>
+                <textarea placeholder="Descreva um asset complexo para seu jogo que você criaria combinando formas simples. Ex: 'Uma espada mágica = cilindro (cabo) + losango (lâmina) + círculo (pedra)'"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar minha ideia</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 17</h4>
+                <p>🎯 <strong>Missão:</strong> Crie uma espada ou item mágico usando APENAS operações com formas básicas. Use pelo menos 3 operações diferentes (unir, subtrair, etc)!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" disabled>⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 17 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 18: Usando a ferramenta Caneta -->
+        <section class="aula" id="aula18">
+            <div class="aula-header">
+                <h2>✏️ Aula 18: Maestria da Ferramenta Caneta</h2>
+                <button class="btn-estela" onclick="ouvirEstela(18)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-18">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-18">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-18">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>A ferramenta Caneta é como uma varinha mágica que desenha curvas perfeitas! É a ferramenta favorita dos profissionais porque permite controle total sobre cada linha.</p>
+                    
+                    <p>Muitos iniciantes têm medo da Caneta, mas vou te ensinar o segredo: pense nela como conectar pontos, mas com superpoderes! Cada clique cria um ponto, e você pode controlar como a linha se curva entre eles.</p>
+                    
+                    <p>Com a Caneta, você consegue desenhar qualquer forma orgânica - cabelos fluindo, capas esvoaçantes, formas naturais que são impossíveis com formas básicas!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎨 Caneta = Varinha de Curvas Perfeitas</h3>
+                <p><strong>A Caneta é sua ferramenta de liberdade criativa total!</strong> Com ela, você desenha exatamente o que imagina, sem limitações de formas básicas.</p>
+                
+                <div class="exemplo">
+                    <h4>🔮 Anatomia da Ferramenta Caneta:</h4>
+                    <p><strong>📍 PONTOS DE ÂNCORA:</strong> Onde a linha "dobra"</p>
+                    <p><strong>📐 ALÇAS DE DIREÇÃO:</strong> Controlam a curvatura</p>
+                    <p><strong>📏 SEGMENTOS:</strong> Linhas entre os pontos</p>
+                    <p><strong>🎯 BEZIER:</strong> Matemática que cria curvas suaves</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Segredo da Caneta:</strong> Clique para pontos retos, arraste para curvas! Quanto mais você arrasta, mais curvada fica a linha. É geometria intuitiva!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 O que a Caneta Permite Criar:</h4>
+                    <p><strong>🌊 FORMAS ORGÂNICAS:</strong> Cabelos, capas, chamas</p>
+                    <p><strong>⚔️ DETALHES ÚNICOS:</strong> Ornamentos em armas</p>
+                    <p><strong>🎭 EXPRESSÕES:</strong> Formatos de boca e olhos</p>
+                    <p><strong>🌿 ELEMENTOS NATURAIS:</strong> Folhas, galhos, nuvens</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Dominando a Caneta</h4>
+                <p>Para criar uma curva suave entre dois pontos, você deve:</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🔲 Apenas clicar nos pontos</div>
+                    <div class="opcao" onclick="responder(this, true)">↗️ Arrastar para criar alças de direção</div>
+                    <div class="opcao" onclick="responder(this, false)">⌨️ Usar atalho de teclado</div>
+                    <div class="opcao" onclick="responder(this, false)">🔄 Fazer várias curvas pequenas</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Primeira Experiência com Caneta:</h4>
+                <textarea placeholder="Pratique com a ferramenta Caneta e descreva sua experiência. O que foi mais difícil? Que formas conseguiu criar? Dicas que descobriu?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar experiência</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 18</h4>
+                <p>🎯 <strong>Missão:</strong> Use a ferramenta Caneta para desenhar uma chama ou folha orgânica. Foque em fazer curvas suaves - não se preocupe com perfeição!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 26 de 26</div>
+                <button class="nav-btn" disabled>Curso Concluído! 🎉</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Estado global
+        let aulaAtual = 17;
+        let audioAtual = null;
+        let audioElement = null;
+        let textosSalvos = {};
+
+        // Navegação entre aulas
+        function irParaAula(numeroAula) {
+            // Esconder aula atual
+            document.querySelectorAll('.aula').forEach(aula => {
+                aula.classList.remove('active');
+            });
+            
+            // Mostrar nova aula
+            document.getElementById(`aula${numeroAula}`).classList.add('active');
+            
+            // Atualizar botões do menu
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Parar áudio se estiver tocando
+            pararAudio();
+            
+            // Atualizar aula atual
+            aulaAtual = numeroAula;
+            
+            // Scroll para o topo
+            window.scrollTo(0, 0);
+        }
+
+        function proximaAula() {
+            if (aulaAtual < 26) {
+                const novaAula = aulaAtual + 1;
+                irParaAula(novaAula);
+                // Atualizar botão ativo no menu
+                document.querySelectorAll('.menu-btn').forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (index === novaAula - 17) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        function aulaAnterior() {
+            if (aulaAtual > 17) {
+                const novaAula = aulaAtual - 1;
+                irParaAula(novaAula);
+                // Atualizar botão ativo no menu
+                document.querySelectorAll('.menu-btn').forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (index === novaAula - 17) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Sistema de áudio da Estela com arquivos MP3 reais
+        function ouvirEstela(numeroAula) {
+            const btn = event.target;
+            const controlsId = `audio-controls-${numeroAula}`;
+            const textoId = `texto-estela-${numeroAula}`;
+            const statusId = `status-audio-${numeroAula}`;
+            
+            // Parar áudio anterior se existir
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
+            // Mostrar controles e texto
+            document.getElementById(controlsId).classList.add('ativo');
+            document.getElementById(textoId).classList.add('ativo');
+            
+            const statusEl = document.getElementById(statusId);
+            statusEl.textContent = '🎤 Carregando áudio da Estela...';
+            statusEl.style.background = '#fdcb6e';
+            statusEl.style.color = 'white';
+            
+            // Adicionar efeito visual ao botão
+            btn.classList.add('playing');
+            
+            // Criar elemento de áudio
+            audioElement = new Audio(`aula${numeroAula}.mp3`);
+            
+            // Eventos do áudio
+            audioElement.addEventListener('loadstart', () => {
+                statusEl.textContent = '📡 Conectando com Estela...';
+            });
+            
+            audioElement.addEventListener('loadeddata', () => {
+                statusEl.textContent = '✅ Áudio carregado, iniciando...';
+            });
+            
+            audioElement.addEventListener('canplaythrough', () => {
+                statusEl.textContent = '🎵 Reproduzindo explicação da Estela!';
+                statusEl.style.background = 'linear-gradient(135deg, #2ed573, #1e90ff)';
+            });
+            
+            audioElement.addEventListener('play', () => {
+                statusEl.textContent = '🎵 Reproduzindo explicação da Estela!';
+                statusEl.style.background = 'linear-gradient(135deg, #2ed573, #1e90ff)';
+            });
+            
+            audioElement.addEventListener('pause', () => {
+                statusEl.textContent = '⏸️ Áudio pausado';
+                statusEl.style.background = '#ff7675';
+            });
+            
+            audioElement.addEventListener('ended', () => {
+                statusEl.textContent = '✅ Explicação concluída!';
+                statusEl.style.background = '#00b894';
+                btn.classList.remove('playing');
+            });
+            
+            audioElement.addEventListener('error', (e) => {
+                statusEl.textContent = '❌ Erro ao carregar áudio. Verifique a conexão.';
+                statusEl.style.background = '#d63031';
+                btn.classList.remove('playing');
+                console.error('Erro no áudio:', e);
+            });
+            
+            audioElement.addEventListener('timeupdate', () => {
+                if (audioElement.duration) {
+                    const progresso = Math.round((audioElement.currentTime / audioElement.duration) * 100);
+                    const tempoAtual = formatarTempo(audioElement.currentTime);
+                    const tempoTotal = formatarTempo(audioElement.duration);
+                    statusEl.textContent = `🎵 Reproduzindo ${progresso}% (${tempoAtual}/${tempoTotal})`;
+                }
+            });
+            
+            // Iniciar reprodução
+            audioElement.play().catch(error => {
+                console.error('Erro ao reproduzir áudio:', error);
+                statusEl.textContent = '❌ Erro ao iniciar reprodução. Clique para tentar novamente.';
+                statusEl.style.background = '#d63031';
+                btn.classList.remove('playing');
+            });
+            
+            // Configurar estado
+            audioAtual = {
+                aula: numeroAula,
+                playing: true,
+                speed: 1,
+                element: audioElement
+            };
+        }
+
+        function formatarTempo(segundos) {
+            const min = Math.floor(segundos / 60);
+            const sec = Math.floor(segundos % 60);
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function pausarAudio() {
+            if (audioElement && audioAtual) {
+                audioElement.pause();
+                audioAtual.playing = false;
+                
+                // Remover animação do botão
+                document.querySelectorAll('.btn-estela').forEach(btn => {
+                    btn.classList.remove('playing');
+                });
+            }
+        }
+
+        function continuarAudio() {
+            if (audioElement && audioAtual && !audioAtual.playing) {
+                audioElement.play().then(() => {
+                    audioAtual.playing = true;
+                    
+                    // Adicionar animação do botão
+                    const btn = document.querySelector(`#aula${audioAtual.aula} .btn-estela`);
+                    if (btn) btn.classList.add('playing');
+                }).catch(error => {
+                    console.error('Erro ao continuar áudio:', error);
+                    const statusEl = document.getElementById(`status-audio-${audioAtual.aula}`);
+                    statusEl.textContent = '❌ Erro ao continuar reprodução';
+                    statusEl.style.background = '#d63031';
+                });
+            }
+        }
+
+        function pararAudio() {
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                audioElement = null;
+            }
+            
+            if (audioAtual) {
+                // Esconder controles
+                document.getElementById(`audio-controls-${audioAtual.aula}`).classList.remove('ativo');
+                document.getElementById(`texto-estela-${audioAtual.aula}`).classList.remove('ativo');
+                
+                // Remover efeito do botão
+                document.querySelectorAll('.btn-estela').forEach(btn => {
+                    btn.classList.remove('playing');
+                });
+                
+                audioAtual = null;
+            }
+        }
+
+        function mudarVelocidade(speed) {
+            if (audioElement && audioAtual) {
+                audioElement.playbackRate = speed;
+                audioAtual.speed = speed;
+                
+                // Atualizar botões de velocidade
+                const aulaControls = document.getElementById(`audio-controls-${audioAtual.aula}`);
+                aulaControls.querySelectorAll('.controles-velocidade button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                const statusEl = document.getElementById(`status-audio-${audioAtual.aula}`);
+                if (audioElement.duration) {
+                    const progresso = Math.round((audioElement.currentTime / audioElement.duration) * 100);
+                    statusEl.textContent = `🎵 Reproduzindo a ${speed}x - ${progresso}%`;
+                } else {
+                    statusEl.textContent = `🎵 Reproduzindo a ${speed}x velocidade`;
+                }
+            }
+        }
+
+        // Sistema de Quiz
+        function responder(elemento, correto) {
+            // Desabilitar outras opções
+            const opcoes = elemento.parentNode.querySelectorAll('.opcao');
+            opcoes.forEach(opcao => {
+                opcao.style.pointerEvents = 'none';
+                if (opcao === elemento) {
+                    if (correto) {
+                        opcao.classList.add('correta');
+                    } else {
+                        opcao.classList.add('incorreta');
+                    }
+                } else if (correto === false) {
+                    // Destacar a resposta correta se a clicada estiver errada
+                    const textoCorreto = opcao.querySelector || opcao.textContent;
+                    if (isRespostaCorreta(textoCorreto)) {
+                        opcao.classList.add('correta');
+                    }
+                }
+            });
+            
+            // Feedback
+            setTimeout(() => {
+                if (correto) {
+                    alert('🎉 Correto! Você está dominando o conteúdo!');
+                } else {
+                    alert('❌ Ops! Revise o conteúdo e tente novamente na próxima.');
+                }
+            }, 500);
+        }
+
+        function isRespostaCorreta(texto) {
+            const respostasCorretas = [
+                'Subtrair círculo pequeno do grande',
+                'Arrastar para criar alças de direção', 
+                'Acessórios e equipamentos',
+                'Ser imediatamente reconhecível',
+                'Reflexos e brilhos metálicos',
+                'Criar camadas com diferentes distâncias',
+                'Cada membro separado com pivots definidos',
+                'Transparência com modo de mistura',
+                'Padrão consistente com números sequenciais',
+                'Consistência e qualidade do conjunto'
+            ];
+            return respostasCorretas.some(resposta => texto.includes(resposta));
+        }
+
+        // Sistema de salvamento de respostas
+        function salvarResposta(botao) {
+            const textarea = botao.previousElementSibling;
+            const texto = textarea.value.trim();
+            
+            if (texto.length < 10) {
+                alert('📝 Por favor, escreva uma resposta mais detalhada (pelo menos 10 caracteres).');
+                return;
+            }
+            
+            // Salvar no estado local
+            const aulaNum = aulaAtual;
+            const campo = textarea.placeholder;
+            
+            if (!textosSalvos[aulaNum]) {
+                textosSalvos[aulaNum] = {};
+            }
+            textosSalvos[aulaNum][campo] = texto;
+            
+            // Feedback visual
+            botao.textContent = '✅ Salvo!';
+            botao.style.background = '#2ed573';
+            
+            setTimeout(() => {
+                botao.textContent = '💾 Salvar resposta';
+                botao.style.background = '#00CEC9';
+            }, 2000);
+            
+            // Simular salvamento no Google Drive
+            console.log('Salvando no Google Drive:', {
+                aula: aulaNum,
+                campo: campo,
+                resposta: texto
+            });
+        }
+
+        // Funcionalidades extras
+        function mostrarProgresso() {
+            const totalAulas = 10;
+            const aulaIndex = aulaAtual - 17;
+            const progresso = Math.round((aulaIndex / totalAulas) * 100);
+            
+            console.log(`Progresso: ${progresso}% (Aula ${aulaAtual} de 26)`);
+        }
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        proximaAula();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        aulaAnterior();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        // Salvar progresso
+                        localStorage.setItem('cursoIllustratorProgresso', JSON.stringify({
+                            aulaAtual: aulaAtual,
+                            respostasSalvas: textosSalvos,
+                            timestamp: new Date().getTime()
+                        }));
+                        alert('💾 Progresso salvo localmente!');
+                        break;
+                }
+            }
+        });
+
+        // Carregar progresso salvo
+        window.addEventListener('load', function() {
+            const progressoSalvo = localStorage.getItem('cursoIllustratorProgresso');
+            if (progressoSalvo) {
+                try {
+                    const dados = JSON.parse(progressoSalvo);
+                    const agora = new Date().getTime();
+                    const umDia = 24 * 60 * 60 * 1000;
+                    
+                    // Se foi salvo há menos de um dia, restaurar
+                    if (agora - dados.timestamp < umDia) {
+                        if (confirm('📚 Encontrei um progresso salvo. Deseja continuar de onde parou?')) {
+                            aulaAtual = dados.aulaAtual;
+                            textosSalvos = dados.respostasSalvas || {};
+                            irParaAula(aulaAtual);
+                        }
+                    }
+                } catch (e) {
+                    console.log('Erro ao carregar progresso salvo');
+                }
+            }
+        });
+
+        // Auto-save de respostas
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'TEXTAREA') {
+                const texto = e.target.value;
+                if (texto.length > 0) {
+                    // Auto-save após 3 segundos de inatividade
+                    clearTimeout(e.target.autoSaveTimer);
+                    e.target.autoSaveTimer = setTimeout(() => {
+                        const aulaNum = aulaAtual;
+                        const campo = e.target.placeholder;
+                        
+                        if (!textosSalvos[aulaNum]) {
+                            textosSalvos[aulaNum] = {};
+                        }
+                        textosSalvos[aulaNum][campo] = texto;
+                        
+                        // Indicador visual sutil
+                        e.target.style.borderColor = '#2ed573';
+                        setTimeout(() => {
+                            e.target.style.borderColor = '#00CEC9';
+                        }, 1000);
+                    }, 3000);
+                }
+            }
+        });
+
+        // Restaurar respostas salvas quando mudar de aula
+        function restaurarRespostas(numeroAula) {
+            if (textosSalvos[numeroAula]) {
+                const textareas = document.querySelectorAll(`#aula${numeroAula} textarea`);
+                textareas.forEach(textarea => {
+                    const campo = textarea.placeholder;
+                    if (textosSalvos[numeroAula][campo]) {
+                        textarea.value = textosSalvos[numeroAula][campo];
+                    }
+                });
+            }
+        }
+
+        // Atualizar a função irParaAula para restaurar respostas
+        const irParaAulaOriginal = irParaAula;
+        irParaAula = function(numeroAula) {
+            irParaAulaOriginal(numeroAula);
+            setTimeout(() => restaurarRespostas(numeroAula), 100);
+        };
+
+        // Adicionar dicas de navegação
+        function mostrarDicasNavegacao() {
+            const dicas = `
+🎯 DICAS DE NAVEGAÇÃO:
+• Use Ctrl+→ para próxima aula
+• Use Ctrl+← para aula anterior  
+• Use Ctrl+S para salvar progresso
+• Clique nos números das aulas no menu
+• Suas respostas são salvas automaticamente
+            `;
+            alert(dicas);
+        }
+
+        // Botão de ajuda
+        document.addEventListener('DOMContentLoaded', function() {
+            const ajudaBtn = document.createElement('button');
+            ajudaBtn.innerHTML = '❓';
+            ajudaBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--roxo);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
+                z-index: 1000;
+                transition: all 0.3s ease;
+            `;
+            ajudaBtn.onclick = mostrarDicasNavegacao;
+            ajudaBtn.onmouseover = function() {
+                this.style.transform = 'scale(1.1)';
+                this.style.background = 'var(--ciano)';
+            };
+            ajudaBtn.onmouseout = function() {
+                this.style.transform = 'scale(1)';
+                this.style.background = 'var(--roxo)';
+            };
+            document.body.appendChild(ajudaBtn);
+        });
+
+        console.log('🚀 Curso Illustrator Avançado carregado com sucesso!');
+        console.log('💡 Use Ctrl+→/← para navegar e Ctrl+S para salvar');
+    </script>
+</body>
+</html>="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 18 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 19: Criando personagens complexos -->
+        <section class="aula" id="aula19">
+            <div class="aula-header">
+                <h2>👥 Aula 19: Personagens de Nível Profissional</h2>
+                <button class="btn-estela" onclick="ouvirEstela(19)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-19">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-19">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-19">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Agora vamos criar personagens que realmente contam histórias! Um personagem complexo não é apenas bonito - ele comunica personalidade, função e emoção só de olhar.</p>
+                    
+                    <p>O segredo está nas camadas de detalhes. Começamos com a estrutura básica, depois adicionamos roupas, acessórios, expressões e elementos únicos que fazem o personagem ganhar vida!</p>
+                    
+                    <p>Cada elemento deve ter um propósito: aquela cicatriz conta uma história, a cor da roupa revela a personalidade, os acessórios mostram a profissão. É design intencional!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎭 Personagens = Narrativa Visual</h3>
+                <p><strong>Um personagem complexo é uma história contada em pixels!</strong> Cada detalhe comunica algo sobre quem ele é e o que faz.</p>
+                
+                <div class="exemplo">
+                    <h4>🏗️ Arquitetura do Personagem:</h4>
+                    <p><strong>🦴 ESTRUTURA:</strong> Proporções e poses básicas</p>
+                    <p><strong>🎨 APARÊNCIA:</strong> Cores, formas e estilo visual</p>
+                    <p><strong>👕 VESTIMENTAS:</strong> Roupas que contam a profissão</p>
+                    <p><strong>⚔️ ACESSÓRIOS:</strong> Armas, joias, ferramentas</p>
+                    <p><strong>😊 EXPRESSÃO:</strong> Emoções e personalidade</p>
+                </div>
+                
+                <div class="destaque">
+                    🎯 <strong>Lei dos 3 Segundos:</strong> O jogador deve entender quem é seu personagem em 3 segundos. Se precisar explicar, o design falhou!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Elementos que Definem Função:</h4>
+                    <p><strong>⚔️ GUERREIRO:</strong> Músculos, cicatrizes, armadura pesada</p>
+                    <p><strong>🏹 ARQUEIRO:</strong> Ágil, olhos aguçados, equipamento leve</p>
+                    <p><strong>🔮 MAGO:</strong> Roupas fluidas, símbolos mágicos, bastão</p>
+                    <p><strong>🛡️ PROTETOR:</strong> Postura confiante, escudo, cores sólidas</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Design de Personagem</h4>
+                <p>Qual elemento é mais importante para comunicar a função de um personagem?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🎨 Cores bonitas</div>
+                    <div class="opcao" onclick="responder(this, true)">⚔️ Acessórios e equipamentos</div>
+                    <div class="opcao" onclick="responder(this, false)">📏 Altura do personagem</div>
+                    <div class="opcao" onclick="responder(this, false)">💇 Estilo do cabelo</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Biografia do Seu Personagem:</h4>
+                <textarea placeholder="Crie um personagem complexo para seu jogo. Descreva: profissão, personalidade, história de vida e 3 elementos visuais únicos que mostram isso."></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar biografia</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 19</h4>
+                <p>🎯 <strong>Missão:</strong> Evolua seu personagem básico anterior adicionando 3 camadas de complexidade: roupas específicas, 1 acessório único e 1 detalhe que conta sua história!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 19 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 20: Projetando ativos de jogo: ícones, botões e menus -->
+        <section class="aula" id="aula20">
+            <div class="aula-header">
+                <h2>🖥️ Aula 20: Interface que Seduz e Funciona</h2>
+                <button class="btn-estela" onclick="ouvirEstela(20)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-20">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-20">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-20">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>A interface é o primeiro contato do jogador com seu jogo! Ícones, botões e menus precisam ser bonitos, mas principalmente funcionais e intuitivos.</p>
+                    
+                    <p>Pense na interface como sinalizações numa cidade. Elas precisam ser claras, reconhecíveis e guiar o usuário sem confusão. Um ícone de vida em formato de coração é universal - todos entendem na hora!</p>
+                    
+                    <p>O segredo está em equilibrar beleza com funcionalidade. Cada elemento deve ter uma função clara, ser fácil de clicar e visualmente coerente com o resto do jogo.</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎯 Interface = Comunicação Visual</h3>
+                <p><strong>Sua interface é a linguagem que fala com o jogador!</strong> Cada ícone, botão e menu deve comunicar sua função instantaneamente.</p>
+                
+                <div class="exemplo">
+                    <h4>🧭 Elementos Essenciais da UI:</h4>
+                    <p><strong>🔘 BOTÕES:</strong> Call-to-action claros e atraentes</p>
+                    <p><strong>🎯 ÍCONES:</strong> Símbolos universais e reconhecíveis</p>
+                    <p><strong>📋 PAINÉIS:</strong> Containers organizados e hierárquicos</p>
+                    <p><strong>📊 INDICADORES:</strong> Barras de vida, mana, progress</p>
+                    <p><strong>🎨 MOLDURAS:</strong> Borders que unificam o visual</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Regra dos 5 Pixels:</strong> Elementos clicáveis devem ter pelo menos 5 pixels de margem. Dedos não são precisos como mouse!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Ícones Universais em Games:</h4>
+                    <p><strong>❤️ VIDA:</strong> Coração vermelho (universal)</p>
+                    <p><strong>⚡ ENERGIA:</strong> Raio ou cristal azul</p>
+                    <p><strong>🛡️ DEFESA:</strong> Escudo metálico</p>
+                    <p><strong>⚔️ ATAQUE:</strong> Espada ou punho</p>
+                    <p><strong>⚙️ CONFIGURAÇÕES:</strong> Engrenagem cinza</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: UI/UX em Games</h4>
+                <p>Qual é a característica mais importante de um bom ícone de jogo?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🎨 Ser artisticamente bonito</div>
+                    <div class="opcao" onclick="responder(this, true)">👁️ Ser imediatamente reconhecível</div>
+                    <div class="opcao" onclick="responder(this, false)">🌈 Ter muitas cores</div>
+                    <div class="opcao" onclick="responder(this, false)">📏 Ser muito detalhado</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Inventário da Interface:</h4>
+                <textarea placeholder="Liste todos os elementos de interface que seu jogo precisa (botões, ícones, painéis). Para cada um, descreva sua função e como seria visualmente."></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar inventário UI</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 20</h4>
+                <p>🎯 <strong>Missão:</strong> Crie um kit básico de UI: 1 botão de play, 1 ícone de vida, 1 ícone de pausa e 1 painel para pontuação. Mantenha tudo coerente!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 20 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 21: Texturas e padrões -->
+        <section class="aula" id="aula21">
+            <div class="aula-header">
+                <h2>🎨 Aula 21: Texturas que Dão Vida</h2>
+                <button class="btn-estela" onclick="ouvirEstela(21)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-21">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-21">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-21">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Texturas e padrões são como temperos visuais que transformam elementos planos em superfícies ricas e interessantes! É a diferença entre uma parede lisa e uma parede de tijolos.</p>
+                    
+                    <p>Em jogos 2D, texturas vetoriais criam profundidade sem peso extra nos arquivos. Você pode simular madeira, metal, tecido, pedra - tudo usando gradientes, padrões e efeitos inteligentes!</p>
+                    
+                    <p>O segredo está na sutileza. Uma textura bem feita é percebida inconscientemente - ela adiciona realismo sem chamar atenção para si mesma.</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🌟 Texturas = Realismo Mágico</h3>
+                <p><strong>Texturas transformam gráficos planos em mundos tácteis!</strong> Elas fazem o jogador "sentir" as superfícies através dos olhos.</p>
+                
+                <div class="exemplo">
+                    <h4>🔧 Arsenal de Texturas Vetoriais:</h4>
+                    <p><strong>🌊 GRADIENTES:</strong> Simulam profundidade e volume</p>
+                    <p><strong>🔄 PADRÕES:</strong> Repetem elementos para criar superfícies</p>
+                    <p><strong>💫 EFEITOS:</strong> Brilhos, sombras e highlights</p>
+                    <p><strong>🎭 MÁSCARAS:</strong> Aplicam texturas em áreas específicas</p>
+                    <p><strong>📐 DISTORÇÕES:</strong> Simulam perspectiva e curvatura</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Hierarquia de Texturas:</strong> Personagens = texturas sutis, Backgrounds = texturas ricas, UI = texturas mínimas. Cada nível tem sua intensidade!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Texturas Essenciais para Games:</h4>
+                    <p><strong>🗿 PEDRA:</strong> Cinzas com variações e rachaduras</p>
+                    <p><strong>🌳 MADEIRA:</strong> Listras orgânicas em tons terrosos</p>
+                    <p><strong>⚔️ METAL:</strong> Reflexos e gradientes metálicos</p>
+                    <p><strong>👕 TECIDO:</strong> Tramas suaves e dobras naturais</p>
+                    <p><strong>💧 ÁGUA:</strong> Transparências e ondulações</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Aplicação de Texturas</h4>
+                <p>Para criar a sensação de metal numa armadura, qual efeito é mais importante?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🌈 Muitas cores vibrantes</div>
+                    <div class="opcao" onclick="responder(this, true)">✨ Reflexos e brilhos metálicos</div>
+                    <div class="opcao" onclick="responder(this, false)">🔄 Padrões repetitivos</div>
+                    <div class="opcao" onclick="responder(this, false)">📐 Formas geométricas</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Biblioteca de Texturas:</h4>
+                <textarea placeholder="Liste 5 materiais/texturas que seu jogo precisa (ex: madeira, metal, tecido). Para cada um, descreva como você criaria essa textura vetorialmente."></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar biblioteca</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 21</h4>
+                <p>🎯 <strong>Missão:</strong> Crie 3 amostras de textura diferentes: uma de madeira, uma de metal e uma de tecido. Use apenas gradientes e padrões vetoriais!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 21 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 22: Criando fundos e ambientes -->
+        <section class="aula" id="aula22">
+            <div class="aula-header">
+                <h2>🏞️ Aula 22: Mundos que Respiram</h2>
+                <button class="btn-estela" onclick="ouvirEstela(22)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-22">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-22">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-22">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Fundos e ambientes são a alma do seu jogo! Eles criam o mood, contam a história do mundo e fazem o jogador se sentir imerso numa realidade alternativa.</p>
+                    
+                    <p>Um bom ambiente trabalha em camadas: o céu ao fundo, montanhas médias, árvores próximas. Cada camada tem sua função e profundidade. É como montar um diorama digital!</p>
+                    
+                    <p>O truque está no paralaxe visual - elementos mais distantes se movem mais devagar, criando sensação de profundidade mesmo em 2D!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🌍 Ambientes = Storytelling Visual</h3>
+                <p><strong>Cada ambiente conta uma história sem palavras!</strong> As cores, formas e elementos revelam que tipo de mundo o jogador está explorando.</p>
+                
+                <div class="exemplo">
+                    <h4>🎬 Camadas Cinematográficas:</h4>
+                    <p><strong>🌌 FUNDO DISTANTE:</strong> Céu, horizon, atmosfera</p>
+                    <p><strong>🏔️ PLANO MÉDIO:</strong> Montanhas, construções distantes</p>
+                    <p><strong>🌳 PRIMEIRO PLANO:</strong> Árvores, rochas, detalhes</p>
+                    <p><strong>🎮 PLANO DE JOGO:</strong> Onde a ação acontece</p>
+                    <p><strong>🌟 EFEITOS:</strong> Particulados, luz, atmosfera</p>
+                </div>
+                
+                <div class="destaque">
+                    🎯 <strong>Regra 60-30-10:</strong> 60% tons neutros (fundo), 30% cor secundária (meio), 10% cor destaque (detalhes). Equilibrio visual perfeito!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎨 Ambientes por Gênero:</h4>
+                    <p><strong>🌲 FLORESTA MÍSTICA:</strong> Verdes profundos, luz filtrada</p>
+                    <p><strong>🏰 CASTELO MEDIEVAL:</strong> Pedras cinzas, bandeiras tremulando</p>
+                    <p><strong>🌆 CIDADE CYBERPUNK:</strong> Neons vibrantes, céu noturno</p>
+                    <p><strong>🏜️ DESERTO ALIENÍGENA:</strong> Laranjas quentes, formações rochosas</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Design de Ambientes</h4>
+                <p>Para criar sensação de profundidade em backgrounds 2D, qual técnica é mais eficaz?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🌈 Usar cores vibrantes em tudo</div>
+                    <div class="opcao" onclick="responder(this, true)">📐 Criar camadas com diferentes distâncias</div>
+                    <div class="opcao" onclick="responder(this, false)">📏 Fazer tudo do mesmo tamanho</div>
+                    <div class="opcao" onclick="responder(this, false)">🔲 Usar apenas formas geométricas</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Conceito do Seu Mundo:</h4>
+                <textarea placeholder="Descreva o ambiente principal do seu jogo. Que atmosfera quer criar? Que cores dominarão? Como será dividido em camadas para criar profundidade?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar conceito</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 22</h4>
+                <p>🎯 <strong>Missão:</strong> Crie um background em 3 camadas: fundo distante (céu), plano médio (elementos decorativos) e primeiro plano (onde o jogo acontece)!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 22 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 23: Animando com o Illustrator -->
+        <section class="aula" id="aula23">
+            <div class="aula-header">
+                <h2>🎬 Aula 23: Preparando para Animação</h2>
+                <button class="btn-estela" onclick="ouvirEstela(23)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-23">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-23">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-23">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Embora o Illustrator não seja uma ferramenta de animação completa, ele é perfeito para preparar assets que serão animados! Vamos aprender a criar personagens e objetos "animation-ready".</p>
+                    
+                    <p>O segredo está em pensar modularmente. Em vez de criar um personagem em uma peça só, você separa em partes: corpo, braços, pernas, cabeça. Cada parte será animada independentemente!</p>
+                    
+                    <p>É como criar um boneco articulado digital. Cada junta deve ser pensada para movimento, cada parte deve funcionar em múltiplas poses!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎪 Assets = Bonecos Articulados</h3>
+                <p><strong>Pensar em animação desde o design é a chave do sucesso!</strong> Cada elemento deve ser criado pensando em como se moverá.</p>
+                
+                <div class="exemplo">
+                    <h4>🔧 Estrutura Modular para Animação:</h4>
+                    <p><strong>👤 CORPO:</strong> Torso central, ponto de pivot</p>
+                    <p><strong>💪 MEMBROS:</strong> Braços e pernas separados</p>
+                    <p><strong>🖐️ EXTREMIDADES:</strong> Mãos e pés articulados</p>
+                    <p><strong>😊 CABEÇA:</strong> Independente para expressões</p>
+                    <p><strong>👁️ DETALHES:</strong> Olhos e boca separados</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Regra do Pivot:</strong> Cada parte deve ter seu ponto de rotação bem definido. O braço gira no ombro, o antebraço no cotovelo!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎯 Preparação para Animação:</h4>
+                    <p><strong>📦 SPRITE SHEETS:</strong> Múltiplas poses organizadas</p>
+                    <p><strong>🔄 BONE STRUCTURE:</strong> Hierarquia de partes</p>
+                    <p><strong>📐 REGISTRATION POINTS:</strong> Pontos de ancoragem</p>
+                    <p><strong>🎭 EXPRESSION SHEETS:</strong> Variações de rosto</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Preparação para Animação</h4>
+                <p>Para animar um personagem caminhando, como você organizaria as partes?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🎨 Tudo em uma peça única</div>
+                    <div class="opcao" onclick="responder(this, true)">🔧 Cada membro separado com pivots definidos</div>
+                    <div class="opcao" onclick="responder(this, false)">📱 Apenas o corpo principal</div>
+                    <div class="opcao" onclick="responder(this, false)">🎪 Várias versões completas</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Planejamento de Animação:</h4>
+                <textarea placeholder="Descreva como você dividiria seu personagem principal em partes para animação. Quais movimentos ele precisa fazer? Como organizaria as peças?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar planejamento</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 23</h4>
+                <p>🎯 <strong>Missão:</strong> Separe seu personagem em partes modulares: cabeça, corpo, braço esquerdo, braço direito, perna esquerda, perna direita. Cada parte em sua própria camada!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 23 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 24: Trabalhando com máscaras e transparência -->
+        <section class="aula" id="aula24">
+            <div class="aula-header">
+                <h2>🎭 Aula 24: Máscaras e Transparências Mágicas</h2>
+                <button class="btn-estela" onclick="ouvirEstela(24)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-24">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-24">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-24">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Máscaras e transparências são truques de mágico visual! Com elas, você esconde, revela e combina elementos de forma profissional e sofisticada.</p>
+                    
+                    <p>Uma máscara é como um estêncil - ela determina que partes do objeto ficam visíveis. Transparências permitem sobreposições sutis que criam profundidade e interesse visual.</p>
+                    
+                    <p>Essas técnicas são essenciais para efeitos especiais, sobreposições complexas e criação de elementos que parecem naturalmente integrados!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎪 Máscaras = Mágica Visual</h3>
+                <p><strong>Máscaras controlam o que é visível, criando efeitos impossíveis!</strong> É como ter superpoderes de invisibilidade seletiva.</p>
+                
+                <div class="exemplo">
+                    <h4>🔮 Arsenal de Máscaras:</h4>
+                    <p><strong>✂️ CLIPPING MASK:</strong> Corta objetos na forma desejada</p>
+                    <p><strong>👁️ OPACITY MASK:</strong> Controla transparência por gradiente</p>
+                    <p><strong>🌊 LAYER MASK:</strong> Esconde/revela partes de camadas</p>
+                    <p><strong>🎭 BLENDING MODES:</strong> Modos de mistura especiais</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Poder da Transparência:</strong> Use valores entre 70-90% para sobreposições naturais. 50% fica muito óbvio, 95% muito sutil!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Aplicações em Games:</h4>
+                    <p><strong>💧 EFEITOS DE ÁGUA:</strong> Transparências azuladas</p>
+                    <p><strong>👻 ELEMENTOS ESPECTRAIS:</strong> Opacidade reduzida</p>
+                    <p><strong>💨 FUMAÇA E NÉVOA:</strong> Gradientes transparentes</p>
+                    <p><strong>✨ BRILHOS MÁGICOS:</strong> Overlays luminosos</p>
+                    <p><strong>🌙 SOMBRAS SUAVES:</strong> Máscaras graduais</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Máscaras e Transparência</h4>
+                <p>Para criar um efeito de água transparente sobre uma rocha, qual técnica usar?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🎨 Apenas mudar a cor para azul</div>
+                    <div class="opcao" onclick="responder(this, true)">💧 Transparência com modo de mistura</div>
+                    <div class="opcao" onclick="responder(this, false)">✂️ Cortar a rocha</div>
+                    <div class="opcao" onclick="responder(this, false)">📐 Adicionar contorno azul</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Planejando Efeitos Especiais:</h4>
+                <textarea placeholder="Que efeitos especiais seu jogo precisa? (água, fogo, magia, sombras) Como você usaria máscaras e transparências para criar cada um?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar efeitos</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 24</h4>
+                <p>🎯 <strong>Missão:</strong> Crie um efeito mágico usando máscaras: uma aura brilhante ao redor do seu personagem ou um efeito de invisibilidade parcial!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 24 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 25: Preparando ativos para animação -->
+        <section class="aula" id="aula25">
+            <div class="aula-header">
+                <h2>📦 Aula 25: Assets Prontos para Ação</h2>
+                <button class="btn-estela" onclick="ouvirEstela(25)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-25">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-25">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-25">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Agora vamos preparar seus assets para serem animados em engines de jogos! É como embalar presentes - cada peça deve estar perfeitamente organizada e pronta para uso.</p>
+                    
+                    <p>A organização é crucial: nomenclatura consistente, tamanhos padronizados, e estrutura lógica. Um programador deve conseguir usar seus assets sem precisar adivinhar nada!</p>
+                    
+                    <p>Vamos criar sprite sheets, definir pontos de ancoragem e exportar tudo nos formatos corretos. Seus assets vão brilhar em qualquer engine!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🎯 Assets = Ingredientes Prontos</h3>
+                <p><strong>Assets bem preparados são a diferença entre desenvolvimento suave e caos total!</strong> Organização é superpoder em game dev.</p>
+                
+                <div class="exemplo">
+                    <h4>📋 Checklist de Asset Profissional:</h4>
+                    <p><strong>📏 TAMANHOS CONSISTENTES:</strong> Múltiplos de 16, 32, 64 pixels</p>
+                    <p><strong>📛 NOMENCLATURA CLARA:</strong> char_hero_idle_01.png</p>
+                    <p><strong>🎯 PONTOS DE ANCORAGEM:</strong> Pivots bem definidos</p>
+                    <p><strong>📦 SPRITE SHEETS:</strong> Animações organizadas</p>
+                    <p><strong>📁 ESTRUTURA DE PASTAS:</strong> Hierarquia lógica</p>
+                </div>
+                
+                <div class="destaque">
+                    💡 <strong>Padrão de Nomenclatura:</strong> [tipo]_[nome]_[ação]_[frame].png - Exemplo: char_mago_attack_03.png. Consistência salva vidas!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🎮 Organização por Categoria:</h4>
+                    <p><strong>👤 CHARACTERS/:</strong> Personagens e criaturas</p>
+                    <p><strong>🖼️ BACKGROUNDS/:</strong> Cenários e ambientes</p>
+                    <p><strong>🎯 UI/:</strong> Interface e menus</p>
+                    <p><strong>🎵 EFFECTS/:</strong> Partículas e efeitos especiais</p>
+                    <p><strong>🔧 PROPS/:</strong> Objetos e itens do mundo</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz: Organização de Assets</h4>
+                <p>Qual é a melhor prática para nomear frames de animação?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">🎨 Nomes criativos únicos</div>
+                    <div class="opcao" onclick="responder(this, true)">📊 Padrão consistente com números sequenciais</div>
+                    <div class="opcao" onclick="responder(this, false)">📱 Apenas números</div>
+                    <div class="opcao" onclick="responder(this, false)">🔤 Apenas letras</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Estrutura dos Seus Assets:</h4>
+                <textarea placeholder="Planeje a estrutura de pastas e nomenclatura para os assets do seu jogo. Como organizará personagens, backgrounds, UI, etc? Que padrão de nomes usará?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar estrutura</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Desafio Prático da Aula 25</h4>
+                <p>🎯 <strong>Missão:</strong> Organize todos os assets criados até agora seguindo um padrão profissional. Renomeie arquivos, crie pastas lógicas e prepare tudo para exportação!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick="aulaAnterior()">⬅️ Aula Anterior</button>
+                <div class="progresso">Aula 25 de 26</div>
+                <button class="nav-btn" onclick="proximaAula()">Próxima Aula ➡️</button>
+            </div>
+        </section>
+        
+        <!-- Aula 26: Projeto final: Projetar um personagem e ativos básicos de jogo -->
+        <section class="aula" id="aula26">
+            <div class="aula-header">
+                <h2>🏆 Aula 26: Projeto Final - Seu Portfolio Completo</h2>
+                <button class="btn-estela" onclick="ouvirEstela(26)">
+                    🔊 Ouvir explicação da Estela
+                </button>
+                
+                <div class="audio-controls" id="audio-controls-26">
+                    <h4>🎵 Controles de Áudio da Estela</h4>
+                    <div class="controles-principais">
+                        <button onclick="pausarAudio()">⏸️ Pausar</button>
+                        <button onclick="continuarAudio()">▶️ Continuar</button>
+                        <button onclick="pararAudio()">⏹️ Parar</button>
+                    </div>
+                    <div class="controles-velocidade">
+                        <label>Velocidade:</label>
+                        <button onclick="mudarVelocidade(0.5)">0.5x</button>
+                        <button onclick="mudarVelocidade(1)" class="active">1x</button>
+                        <button onclick="mudarVelocidade(1.5)">1.5x</button>
+                        <button onclick="mudarVelocidade(2)">2x</button>
+                    </div>
+                    <div class="status-audio" id="status-audio-26">
+                        🎤 Preparando explicação da Estela...
+                    </div>
+                </div>
+                
+                <div class="texto-estela" id="texto-estela-26">
+                    <h4>🤖 Estela está explicando:</h4>
+                    <p>Chegamos ao projeto final! É hora de unir tudo que aprendemos num portfolio completo que mostra suas habilidades de designer de jogos profissional!</p>
+                    
+                    <p>Você vai criar um conjunto completo de assets: personagem principal com variações, UI completa, background rico, e todos os elementos organizados profissionalmente. É seu cartão de visitas como game artist!</p>
+                    
+                    <p>Lembre-se: qualidade supera quantidade. É melhor ter poucos elementos excepcionais do que muitos mediocres. Cada pixel deve contar!</p>
+                </div>
+            </div>
+            
+            <div class="secao">
+                <h3>🚀 Portfolio = Sua Carta de Apresentação</h3>
+                <p><strong>Este projeto final será seu passaporte para o mundo profissional!</strong> Cada elemento deve demonstrar maestria técnica e visão artística.</p>
+                
+                <div class="exemplo">
+                    <h4>📋 Kit Completo do Projeto Final:</h4>
+                    <p><strong>👤 PERSONAGEM PRINCIPAL:</strong> Versões estática e modular</p>
+                    <p><strong>🎯 UI COMPLETA:</strong> 8 elementos de interface</p>
+                    <p><strong>🌍 AMBIENTE:</strong> Background em 3 camadas</p>
+                    <p><strong>🔧 PROPS:</strong> 5 objetos interativos</p>
+                    <p><strong>✨ EFEITOS:</strong> 3 elementos especiais</p>
+                    <p><strong>📦 DOCUMENTAÇÃO:</strong> Guia de estilo completo</p>
+                </div>
+                
+                <div class="destaque">
+                    🎯 <strong>Critérios de Excelência:</strong> Consistência visual, funcionalidade clara, organização profissional e originalidade criativa. Seu trabalho deve contar uma história!
+                </div>
+                
+                <div class="exemplo">
+                    <h4>🏆 Especificações do Portfolio:</h4>
+                    <p><strong>🎨 ESTILO COERENTE:</strong> Todas as peças harmonizadas</p>
+                    <p><strong>📐 QUALIDADE TÉCNICA:</strong> Vetores limpos e bem estruturados</p>
+                    <p><strong>🎪 CRIATIVIDADE:</strong> Elementos únicos e memoráveis</p>
+                    <p><strong>📋 APRESENTAÇÃO:</strong> Organização e documentação profissional</p>
+                </div>
+            </div>
+            
+            <div class="quiz">
+                <h4>📝 Quiz Final: Visão Profissional</h4>
+                <p>Qual é o aspecto mais importante de um portfolio de game art?</p>
+                
+                <div class="opcoes">
+                    <div class="opcao" onclick="responder(this, false)">📊 Quantidade de elementos</div>
+                    <div class="opcao" onclick="responder(this, true)">🎯 Consistência e qualidade do conjunto</div>
+                    <div class="opcao" onclick="responder(this, false)">🌈 Variedade de estilos</div>
+                    <div class="opcao" onclick="responder(this, false)">⚡ Velocidade de criação</div>
+                </div>
+            </div>
+            
+            <div class="campo-resposta">
+                <h4>✍️ Planejamento do Projeto Final:</h4>
+                <textarea placeholder="Descreva seu projeto final: que personagem criará, que ambiente representará, que emoções quer transmitir. Qual será o conceito unificador de todos os elementos?"></textarea>
+                <button class="btn-salvar" onclick="salvarResposta(this)">💾 Salvar projeto final</button>
+            </div>
+            
+            <div class="drive-alert">
+                💾 <strong>Atenção:</strong> Salve agora este documento no seu Google Drive para não perder seu progresso.
+            </div>
+            
+            <div class="desafio">
+                <h4>🚀 Projeto Final Épico</h4>
+                <p>🎯 <strong>Missão Suprema:</strong> Crie seu portfolio completo com todos os elementos mencionados. Dedique tempo suficiente - este será seu cartão de visitas profissional!</p>
+            </div>
+            
+            <div class="parabens">
+                <h3>🎉 PARABÉNS!</h3>
+                <p><strong>Você concluiu a segunda etapa do curso!</strong></p>
+                <p>Agora você domina técnicas avançadas de criação de assets para jogos 2D. Suas habilidades evoluíram de iniciante para nível profissional!</p>
+                <p><strong>🚀 Próximos passos:</strong> Continue praticando, construa seu portfolio e prepare-se para surpreender o mercado de games!</p>
+            </div>
+            
+            <div class="navegacao">
+                <button class="nav-btn" onclick
